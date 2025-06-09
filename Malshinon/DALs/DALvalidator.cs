@@ -72,6 +72,36 @@ namespace Malshinon.DALs
                 dal.CloseConnection();
             }
         }
+        public bool isReporter(string Fname)
+        {
+            try
+            {
+                dal.OpenConnection();
+                string query = "SELECT * FROM people WHERE first_name = @Fname AND type = 'reporter'";
+                using (var cmd = new MySqlCommand(query, dal.Get_conn()))
+                {
+                    cmd.Parameters.AddWithValue("@Fname", Fname);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        return reader.Read();
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"Sql Exception: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                dal.CloseConnection();
+            }
+        }
 
 
     }
