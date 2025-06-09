@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Malshinon.DALs;
+using Malshinon.Entities;
+using Malshinon.Manegers;
+using Malshinon.Utils;
 
 namespace Malshinon
 {
@@ -10,6 +14,23 @@ namespace Malshinon
     {
         static void Main(string[] args)
         {
+            //DAL dAL = new DAL();
+            //DALvalidator dALvalidator = new DALvalidator();
+            //SecretCodeGenerator CodeGenerator = new SecretCodeGenerator();
+            //dAL.OpenConnection();
+            //string code = CodeGenerator.GenerateCode("aaaab");
+            //Console.WriteLine(dALvalidator.EnsurePersonExeist("muchamady"));
+
+            //Person person = new Person("muchamady", "alcerem", code, "reporter");
+            //dAL.AddPersonToDB(person);
+            Menu menu = new Menu();
+            DALvalidator dalValdator = new DALvalidator();
+            DAL dal = new DAL();
+            SecretCodeGenerator SCG = new SecretCodeGenerator();
+            MainManeger maneger = new MainManeger(dalValdator, dal, SCG);
+            menu.ShowMenu(maneger);
+
+
         }
     }
 }
