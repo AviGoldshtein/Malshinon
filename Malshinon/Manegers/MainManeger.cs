@@ -55,7 +55,7 @@ namespace Malshinon.Manegers
             {
                 if (DalValidator.isTarget(reporterFname))
                 {
-                    Dal.UptateStatus(reporterFname, "both");
+                    Dal._UptateStatus(reporterFname, "both");
                 }
             }
         }
@@ -65,6 +65,13 @@ namespace Malshinon.Manegers
             {
                 string code = CodeGenerator.GenerateCode();
                 Dal.AddPersonToDB(targetFname, targetLname, code, "target");
+            }
+            else
+            {
+                if (DalValidator.isReporter(targetFname))
+                {
+                    Dal._UptateStatus(targetFname, "both");
+                }
             }
         }
         public (string Fname, string Lname) ExtractName(string text)
