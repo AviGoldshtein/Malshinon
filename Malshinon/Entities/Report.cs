@@ -8,5 +8,6 @@ namespace Malshinon.Entities
 {
     internal class Report
     {
+
     }
 }

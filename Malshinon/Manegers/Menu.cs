@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace Malshinon.Manegers
 {
-    internal class Menu
+    internal static class Menu
     {
         
-        public void ShowMenu(MainManeger maneger)
+        public static void ShowMenu(MainManeger maneger)
         {
             bool running = true;
             while (running)
             {
                 Console.WriteLine("1. Add report to data base\n" +
+                    "2. get the secret code by name\n" +
                     "1000. to exit\n");
                 string choice = Console.ReadLine();
                 Console.Clear();
