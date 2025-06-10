@@ -11,6 +11,7 @@ namespace Malshinon.DALs
     internal class DALreport
     {
         DBconnectionMalshinon dbConnection = new DBconnectionMalshinon();
+        DALvalidator DalValidator = new DALvalidator();
 
         public void AddReportToDB(int reporterId, int targetId, string text)
         {
@@ -100,6 +101,62 @@ namespace Malshinon.DALs
                 string query = "SELECT * FROM IntelReports";
                 using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32("id");
+                            int reporter_id = reader.GetInt32("reporter_id");
+                            int target_id = reader.GetInt32("target_id");
+                            string text = reader.GetString("text");
+                            DateTime timestamp = reader.GetDateTime("timestamp");
+
+                            Console.WriteLine($"id: {id}, reporter_id: {reporter_id}, target_id: {target_id}, text: {text}, timestamp: {timestamp}");
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"Sql Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+            finally
+            {
+                dbConnection.CloseConnection();
+            }
+        }
+        public void showReportsForPerson()
+        {
+            Console.WriteLine("Enter the name that you want to look for");
+            string name = Console.ReadLine();
+
+            if (DalValidator.EnsurePersonExeist(name))
+            {
+                _showReportsByName(name);
+            }
+            else
+            {
+                Console.WriteLine($"{name} coudnt be found");
+            }
+        }
+
+        private void _showReportsByName(string name)
+        {
+            try
+            {
+                dbConnection.OpenConnection();
+                string query = "SELECT i.id, i.reporter_id, i.target_id, i.text, i.timestamp " +
+                    "FROM IntelReports AS i " +
+                    "JOIN people AS p " +
+                    "ON p.id = i.reporter_id " +
+                    "WHERE p.first_name = @Fname";
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
+                {
+                    cmd.Parameters.AddWithValue("@Fname", name);
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

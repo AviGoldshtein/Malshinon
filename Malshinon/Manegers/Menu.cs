@@ -18,9 +18,10 @@ namespace Malshinon.Manegers
                     "2. Add new person to DB\n" +
                     "3. show all people\n" +
                     "4. show all reports\n" +
-                    "5. show reports by reporter name\n" +
-                    "6. show reports by targets name\n" +
+                    "5. show reports linked to a specific reporter\n" +
+                    "6. show reports linked to a specific target\n" +
                     "7. show people of a specific type\n" +
+                    "8. get secret code by full name\n" +
                     "1000. to exit\n");
                 string choice = Console.ReadLine();
                 Console.Clear();
@@ -38,6 +39,9 @@ namespace Malshinon.Manegers
                         break;
                     case "4":
                         maneger.DalReport.showAllReports();
+                        break;
+                    case "5":
+                        maneger.DalReport.showReportsForPerson();
                         break;
                     case "7":
                         maneger.DalPerson.ShowPoupleOfType(typeOptions());
