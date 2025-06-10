@@ -364,6 +364,45 @@ namespace Malshinon.DALs
                 dbConnection.CloseConnection();
             }
         }
+        public void ShowPoupleOfType(string typeasked)
+        {
+            try
+            {
+                dbConnection.OpenConnection();
+                string query = "SELECT * FROM people WHERE type = @type";
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
+                {
+                    cmd.Parameters.AddWithValue("@type", typeasked);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32("id");
+                            string first_name = reader.GetString("first_name");
+                            string last_name = reader.GetString("last_name");
+                            string secret_code = reader.GetString("secret_code");
+                            string type = reader.GetString("type");
+                            int num_reports = reader.GetInt32("num_reports");
+                            int num_mentions = reader.GetInt32("num_mentions");
+
+                            Console.WriteLine($"id: {id}, first_name: {first_name}, last_name: {last_name}, secret_code: {secret_code}, type: {type}, num_reports: {num_reports}, num_mentions: {num_mentions}");
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"Sql Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+            finally
+            {
+                dbConnection.CloseConnection();
+            }
+        }
 
     }
 }

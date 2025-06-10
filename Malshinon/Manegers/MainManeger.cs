@@ -12,14 +12,14 @@ namespace Malshinon.Manegers
     internal class MainManeger
     {
         DALvalidator DalValidator;
-        public DALperson Dal;
+        public DALperson DalPerson;
         SecretCodeGenerator CodeGenerator;
         DALreport DalReport;
 
         public MainManeger(DALvalidator DV, DALperson dal, SecretCodeGenerator SCG, DALreport DR)
         {
             this.DalValidator = DV;
-            this.Dal = dal;
+            this.DalPerson = dal;
             this.CodeGenerator = SCG;
             this.DalReport = DR;
         }
@@ -65,13 +65,13 @@ namespace Malshinon.Manegers
             if (!DalValidator.EnsurePersonExeist(reporterFname))
             {
                 string code = CodeGenerator.GenerateCode();
-                return Dal.AddPersonToDB(reporterFname, reporterLname, code, "reporter");
+                return DalPerson.AddPersonToDB(reporterFname, reporterLname, code, "reporter");
             }
             else
             {
                 if (DalValidator.isTarget(reporterFname))
                 {
-                    Dal.UptateStatus(reporterFname, "both");
+                    DalPerson.UptateStatus(reporterFname, "both");
                     return true;
                 }
             }
@@ -82,13 +82,13 @@ namespace Malshinon.Manegers
             if (!DalValidator.EnsurePersonExeist(targetFname))
             {
                 string code = CodeGenerator.GenerateCode();
-                return Dal.AddPersonToDB(targetFname, targetLname, code, "target");
+                return DalPerson.AddPersonToDB(targetFname, targetLname, code, "target");
             }
             else
             {
                 if (DalValidator.isReporter(targetFname))
                 {
-                    Dal.UptateStatus(targetFname, "both");
+                    DalPerson.UptateStatus(targetFname, "both");
                     return true;
                 }
             }
@@ -111,11 +111,11 @@ namespace Malshinon.Manegers
         }
         public void InsertReport(string reporterFname, string targetFname, string textReport)
         {
-            Dal.IncreseNumReports(reporterFname);
-            Dal.IncreseNumMentions(targetFname);
+            DalPerson.IncreseNumReports(reporterFname);
+            DalPerson.IncreseNumMentions(targetFname);
 
-            int reporterId = Dal.GetIdByFName(reporterFname);
-            int targetId = Dal.GetIdByFName(targetFname);
+            int reporterId = DalPerson.GetIdByFName(reporterFname);
+            int targetId = DalPerson.GetIdByFName(targetFname);
 
             DalReport.AddReportToDB(reporterId, targetId, textReport);
         }
@@ -134,7 +134,7 @@ namespace Malshinon.Manegers
             }
             else
             {
-                bool succsess = Dal.AddPersonToDB(Fname, Lname, code, "reporter");
+                bool succsess = DalPerson.AddPersonToDB(Fname, Lname, code, "reporter");
                 if (succsess)
                 {
                     Console.WriteLine($"{Fname} {Lname} added successfully");
@@ -146,5 +146,7 @@ namespace Malshinon.Manegers
             }
         }
         
+
+
     }
 }

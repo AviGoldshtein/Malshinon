@@ -20,6 +20,7 @@ namespace Malshinon.Manegers
                     "4. show all reports\n" +
                     "5. show reports by reporter name\n" +
                     "6. show reports by targets name\n" +
+                    "7. show people of a specific type\n" +
                     "1000. to exit\n");
                 string choice = Console.ReadLine();
                 Console.Clear();
@@ -33,10 +34,13 @@ namespace Malshinon.Manegers
                         maneger.AddPersonMnualy();
                         break;
                     case "3":
-                        maneger.Dal.showAllPeople();
+                        maneger.DalPerson.showAllPeople();
                         break;
                     case "4":
                         //maneger.Dal.showAllReports();
+                        break;
+                    case "7":
+                        maneger.DalPerson.ShowPoupleOfType(typeOptions());
                         break;
                     case "1000":
                         Console.WriteLine("have a good day");
@@ -53,6 +57,28 @@ namespace Malshinon.Manegers
                     Console.Clear();
                 }
             }
+        }
+
+        public static string typeOptions()
+        {
+            Console.WriteLine("1. reporters\n" +
+                "2. targets\n" +
+                "3. both\n" +
+                "4. potential agets\n");
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    return "reporter";
+                case "2":
+                    return "target";
+                case "3":
+                    return "both";
+                case "4":
+                    return "potential_agent";
+            }
+            return typeOptions();
         }
     }
 }
