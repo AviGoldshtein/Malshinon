@@ -71,7 +71,7 @@ namespace Malshinon.Manegers
             {
                 if (DalValidator.isTarget(reporterFname))
                 {
-                    Dal._UptateStatus(reporterFname, "both");
+                    Dal.UptateStatus(reporterFname, "both");
                     return true;
                 }
             }
@@ -88,7 +88,7 @@ namespace Malshinon.Manegers
             {
                 if (DalValidator.isReporter(targetFname))
                 {
-                    Dal._UptateStatus(targetFname, "both");
+                    Dal.UptateStatus(targetFname, "both");
                     return true;
                 }
             }
