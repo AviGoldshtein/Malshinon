@@ -143,15 +143,26 @@ namespace Malshinon.DALs
         {
             int currentNumReports = _GetCurrentNumReportsByName(Fname);
             int numReports = currentNumReports + 1;
-
             _UpdateNumReports(Fname, numReports);
+
+            double avrageLenReports = GetAvrageLenReports(Fname);
+            if (numReports >= 10 && avrageLenReports >= 100)
+            {
+                Console.WriteLine($"{Fname} is a potential agent");
+                _UptateStatus(Fname, "potential_agent");
+            }
+
         }
         public void IncreseNumMentions(string Fname)
         {
             int currentNumMentions = _GetCurrentNumMentionsByName(Fname);
             int NumMentions = currentNumMentions + 1;
-
             _UpdateNumMentions(Fname, NumMentions);
+
+            if (NumMentions >= 20)
+            {
+                Console.WriteLine($"DANGER: {Fname} has {NumMentions} mentions");
+            }
         }
         public int _GetCurrentNumMentionsByName(string Fname)
         {
@@ -332,6 +343,50 @@ namespace Malshinon.DALs
             }
             return Id;
         }
+        public double GetAvrageLenReports(string Fname)
+        {
+            int sum = 0;
+            int counter = 0;
+            double avrage = 0;
+            try
+            {
+                OpenConnection();
+                string query = "SELECT i.text " +
+                    "FROM IntelReports AS i " +
+                    "JOIN people AS p " +
+                    "ON i.reporter_id = p.id " +
+                    "WHERE first_name = @Fname";
+                using (var cmd = new MySqlCommand(query, _conn))
+                {
+                    cmd.Parameters.AddWithValue("@Fname", $"{Fname}");
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string text = reader.GetString("text");
+                            counter++;
+                            sum += text.Length;
+
+                            //Console.WriteLine(reader.GetString("text"));
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"Sql Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            if (counter > 0) avrage = sum / counter;
+            return avrage;
+        }
         public void AddReportToDB(int reporterId, int targetId, string text)
         {
             try
@@ -347,7 +402,7 @@ namespace Malshinon.DALs
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
-                        Console.WriteLine($"{reporterId} added on {targetId} areport");
+                        Console.WriteLine($"{reporterId} added a report on {targetId}");
                     }
                     else
                     {

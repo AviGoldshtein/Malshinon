@@ -35,14 +35,16 @@ namespace Malshinon.Manegers
             var details = ExtractName(textReport);
             string targetFname = details.Fname;
             string targetLname = details.Lname;
+            if (targetFname != "" && targetLname != "")
+            {
+                EnsureTargetsState(targetFname, targetLname);
 
-            EnsureTargetsState(targetFname, targetLname);
-
-            InsertReport(reporterFname, targetFname, textReport);
-
-
-
-
+                InsertReport(reporterFname, targetFname, textReport);
+            }
+            else
+            {
+                Console.WriteLine("you must include in the report the name of the target");
+            }
         }
         public void EnsureReportersState(string reporterFname, string reporterLname)
         {

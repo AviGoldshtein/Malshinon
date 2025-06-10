@@ -31,7 +31,7 @@ namespace Malshinon.Entities
         public string GetFname() => this.Fname;
         public string GetLname() => this.Lname;
         public string GetSecretCode() => this.SecretCode;
-        public string GetType() => this.Type;
+        public string GetTypeName() => this.Type;
         public int GetNumOfRports() => this.NumOfRports;
         public int GetNumOfMentions() => this.NumOfMentions;
     }
