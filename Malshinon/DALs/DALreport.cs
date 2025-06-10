@@ -129,30 +129,37 @@ namespace Malshinon.DALs
                 dbConnection.CloseConnection();
             }
         }
-        public void showReportsForPerson()
+        public void showReportsForPerson(string type)
         {
             Console.WriteLine("Enter the name that you want to look for");
             string name = Console.ReadLine();
 
             if (DalValidator.EnsurePersonExeist(name))
             {
-                _showReportsByName(name);
+                if (type == "reporter_id" || type == "target_id")
+                {
+                    _showReportsByName(name, type);
+                }
             }
             else
             {
                 Console.WriteLine($"{name} coudnt be found");
             }
         }
-
-        private void _showReportsByName(string name)
+        private void _showReportsByName(string name, string type)
         {
+            if (!(type == "reporter_id" || type == "target_id"))
+            {
+                Console.WriteLine("something was wrong");
+                return;
+            }
             try
             {
                 dbConnection.OpenConnection();
                 string query = "SELECT i.id, i.reporter_id, i.target_id, i.text, i.timestamp " +
                     "FROM IntelReports AS i " +
                     "JOIN people AS p " +
-                    "ON p.id = i.reporter_id " +
+                    $"ON p.id = i.{type} " +
                     "WHERE p.first_name = @Fname";
                 using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {

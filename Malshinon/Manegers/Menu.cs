@@ -41,7 +41,10 @@ namespace Malshinon.Manegers
                         maneger.DalReport.showAllReports();
                         break;
                     case "5":
-                        maneger.DalReport.showReportsForPerson();
+                        maneger.DalReport.showReportsForPerson("reporter_id");
+                        break;
+                    case "6":
+                        maneger.DalReport.showReportsForPerson("target_id");
                         break;
                     case "7":
                         maneger.DalPerson.ShowPoupleOfType(typeOptions());
