@@ -80,7 +80,7 @@ namespace Malshinon.DALs
             }
             return false;
         }
-        public void _UptateStatus(string Fname, string status)
+        public void UptateStatus(string Fname, string status)
         {
             if (_statusOK(status))
             {
@@ -109,7 +109,7 @@ namespace Malshinon.DALs
                 }
             }
         }
-        public bool _statusOK(string status)
+        private bool _statusOK(string status)
         {
             bool statusOK = false;
             string[] statuses = { "reporter", "target", "both", "potential_agent" };
@@ -132,7 +132,7 @@ namespace Malshinon.DALs
             if (numReports >= 10 && avrageLenReports >= 100)
             {
                 Console.WriteLine($"{Fname} is a potential agent");
-                _UptateStatus(Fname, "potential_agent");
+                UptateStatus(Fname, "potential_agent");
             }
 
         }
@@ -147,7 +147,7 @@ namespace Malshinon.DALs
                 Console.WriteLine($"DANGER: {Fname} has {NumMentions} mentions");
             }
         }
-        public int _GetCurrentNumMentionsByName(string Fname)
+        private int _GetCurrentNumMentionsByName(string Fname)
         {
             int currentNumMentions = -1;
             try
@@ -184,7 +184,7 @@ namespace Malshinon.DALs
             }
             return currentNumMentions;
         }
-        public int _GetCurrentNumReportsByName(string Fname)
+        private int _GetCurrentNumReportsByName(string Fname)
         {
             int currentNumReports = -1;
             try
@@ -221,7 +221,7 @@ namespace Malshinon.DALs
             }
             return currentNumReports;
         }
-        public void _UpdateNumMentions(string Fname, int NumMentions)
+        private void _UpdateNumMentions(string Fname, int NumMentions)
         {
             try
             {
@@ -255,7 +255,7 @@ namespace Malshinon.DALs
                 dbConnection.CloseConnection();
             }
         }
-        public void _UpdateNumReports(string Fname, int numReports)
+        private void _UpdateNumReports(string Fname, int numReports)
         {
             try
             {
