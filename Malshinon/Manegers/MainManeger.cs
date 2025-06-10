@@ -14,7 +14,7 @@ namespace Malshinon.Manegers
         DALvalidator DalValidator;
         public DALperson DalPerson;
         SecretCodeGenerator CodeGenerator;
-        DALreport DalReport;
+        public DALreport DalReport;
 
         public MainManeger(DALvalidator DV, DALperson dal, SecretCodeGenerator SCG, DALreport DR)
         {

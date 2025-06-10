@@ -92,5 +92,41 @@ namespace Malshinon.DALs
             if (counter > 0) avrage = sum / counter;
             return avrage;
         }
+        public void showAllReports()
+        {
+            try
+            {
+                dbConnection.OpenConnection();
+                string query = "SELECT * FROM IntelReports";
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32("id");
+                            int reporter_id = reader.GetInt32("reporter_id");
+                            int target_id = reader.GetInt32("target_id");
+                            string text = reader.GetString("text");
+                            DateTime timestamp = reader.GetDateTime("timestamp");
+
+                            Console.WriteLine($"id: {id}, reporter_id: {reporter_id}, target_id: {target_id}, text: {text}, timestamp: {timestamp}");
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"Sql Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+            finally
+            {
+                dbConnection.CloseConnection();
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace Malshinon.Manegers
                         maneger.DalPerson.showAllPeople();
                         break;
                     case "4":
-                        //maneger.Dal.showAllReports();
+                        maneger.DalReport.showAllReports();
                         break;
                     case "7":
                         maneger.DalPerson.ShowPoupleOfType(typeOptions());
