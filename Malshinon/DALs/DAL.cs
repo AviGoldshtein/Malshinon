@@ -55,28 +55,32 @@ namespace Malshinon.DALs
 
         
 
-        public void AddPersonToDB(string Fname, string Lname, string SecretCode, string status)
+        public bool AddPersonToDB(string Fname, string Lname, string SecretCode, string status)
         {
             if (!_statusOK(status))
             {
                 Console.WriteLine("this status is not alloud");
-                return;
+                return false;
             }
             try
             {
+                string firstName = Convert.ToString(char.ToUpper(Fname[0])) + Fname.Substring(1);
+                string lastName = Convert.ToString(char.ToUpper(Lname[0])) + Lname.Substring(1);
+
                 OpenConnection();
                 string query = "INSERT INTO people (first_name, last_name, secret_code, type) " +
                     "VALUES (@Fname, @Lname, @Scode, @Type)";
                 using (var cmd = new MySqlCommand(query, _conn))
                 {
-                    cmd.Parameters.AddWithValue("@Fname", Fname);
-                    cmd.Parameters.AddWithValue("@Lname", Lname);
+                    cmd.Parameters.AddWithValue("@Fname", firstName);
+                    cmd.Parameters.AddWithValue("@Lname", lastName);
                     cmd.Parameters.AddWithValue("@Scode", SecretCode);
                     cmd.Parameters.AddWithValue("@Type", status);
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
                         Console.WriteLine($"{Fname} {Lname} was added");
+                        return true;
                     }
                     else
                     {
@@ -96,6 +100,7 @@ namespace Malshinon.DALs
             {
                 CloseConnection();
             }
+            return false;
         }
         public void _UptateStatus(string Fname, string status)
         {

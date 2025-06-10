@@ -27,7 +27,13 @@ namespace Malshinon.Manegers
             Console.WriteLine("enter last name");
             string reporterLname = Console.ReadLine();
 
-            EnsureReportersState(reporterFname, reporterLname);
+            bool isReporterStateValid = EnsureReportersState(reporterFname, reporterLname);
+            if (!isReporterStateValid)
+            {
+                Console.WriteLine("the prosess of adding a report stoped");
+                return;
+            }
+
 
             Console.WriteLine("Enter your report, dont forget to mantion the targets name");
             string textReport = Console.ReadLine();
@@ -37,7 +43,12 @@ namespace Malshinon.Manegers
             string targetLname = details.Lname;
             if (targetFname != "" && targetLname != "")
             {
-                EnsureTargetsState(targetFname, targetLname);
+                bool isTargetStateValid = EnsureTargetsState(targetFname, targetLname);
+                if (!isTargetStateValid)
+                {
+                    Console.WriteLine("the prosess of adding a report stoped");
+                    return;
+                }
 
                 InsertReport(reporterFname, targetFname, textReport);
             }
@@ -46,35 +57,39 @@ namespace Malshinon.Manegers
                 Console.WriteLine("you must include in the report the name of the target");
             }
         }
-        public void EnsureReportersState(string reporterFname, string reporterLname)
+        public bool EnsureReportersState(string reporterFname, string reporterLname)
         {
             if (!DalValidator.EnsurePersonExeist(reporterFname))
             {
                 string code = CodeGenerator.GenerateCode();
-                Dal.AddPersonToDB(reporterFname, reporterLname, code, "reporter");
+                return Dal.AddPersonToDB(reporterFname, reporterLname, code, "reporter");
             }
             else
             {
                 if (DalValidator.isTarget(reporterFname))
                 {
                     Dal._UptateStatus(reporterFname, "both");
+                    return true;
                 }
             }
+            return false;
         }
-        public void EnsureTargetsState(string targetFname, string targetLname)
+        public bool EnsureTargetsState(string targetFname, string targetLname)
         {
             if (!DalValidator.EnsurePersonExeist(targetFname))
             {
                 string code = CodeGenerator.GenerateCode();
-                Dal.AddPersonToDB(targetFname, targetLname, code, "target");
+                return Dal.AddPersonToDB(targetFname, targetLname, code, "target");
             }
             else
             {
                 if (DalValidator.isReporter(targetFname))
                 {
                     Dal._UptateStatus(targetFname, "both");
+                    return true;
                 }
             }
+            return false;
         }
         public (string Fname, string Lname) ExtractName(string text)
         {
