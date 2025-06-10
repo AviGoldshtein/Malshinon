@@ -30,7 +30,13 @@ namespace Malshinon.Manegers
                         maneger.AddReport();
                         break;
                     case "2":
-
+                        maneger.AddPersonMnualy();
+                        break;
+                    case "3":
+                        maneger.Dal.showAllPeople();
+                        break;
+                    case "4":
+                        //maneger.Dal.showAllReports();
                         break;
                     case "1000":
                         Console.WriteLine("have a good day");
@@ -39,6 +45,12 @@ namespace Malshinon.Manegers
                     default:
                         Console.WriteLine("invalid input");
                         break;
+                }
+                if (running)
+                {
+                    Console.WriteLine("Press any key to continue..");
+                    Console.ReadKey();
+                    Console.Clear();
                 }
             }
         }
