@@ -3,40 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Malshinon.databases;
 using Malshinon.Entities;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Malshinon.DALs
 {
-    internal class DAL
+    internal class DALperson
     {
-        private string connectionStr = "server=localhost;user=root;password=;database=MalshinonDB";
-        private MySqlConnection _conn;
-
-        public MySqlConnection Get_conn() => this._conn;
-
-        public MySqlConnection OpenConnection()
-        {
-            if (_conn == null)
-            {
-                _conn = new MySqlConnection(connectionStr);
-            }
-            if (_conn.State != System.Data.ConnectionState.Open)
-            {
-                _conn.Open();
-                Console.WriteLine("connected succecfuly");
-            }
-            return _conn;
-        }
-        public void CloseConnection()
-        {
-            if (_conn != null && _conn.State == System.Data.ConnectionState.Open)
-            {
-                _conn.Close();
-                _conn = null;
-            }
-        }
+        DALreport DalReport = new DALreport();
+        DBconnectionMalshinon dbConnection = new DBconnectionMalshinon();
 
 
         public List<Person> GetAllPeople()
@@ -67,10 +45,10 @@ namespace Malshinon.DALs
                 string firstName = Convert.ToString(char.ToUpper(Fname[0])) + Fname.Substring(1);
                 string lastName = Convert.ToString(char.ToUpper(Lname[0])) + Lname.Substring(1);
 
-                OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "INSERT INTO people (first_name, last_name, secret_code, type) " +
                     "VALUES (@Fname, @Lname, @Scode, @Type)";
-                using (var cmd = new MySqlCommand(query, _conn))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", firstName);
                     cmd.Parameters.AddWithValue("@Lname", lastName);
@@ -98,7 +76,7 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
             return false;
         }
@@ -108,9 +86,9 @@ namespace Malshinon.DALs
             {
                 try
                 {
-                    OpenConnection();
+                    dbConnection.OpenConnection();
                     string query = "UPDATE people SET type = @Type WHERE first_name = @Fname";
-                    using (var cmd = new MySqlCommand(query, _conn))
+                    using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                     {
                         cmd.Parameters.AddWithValue("@Fname", Fname);
                         cmd.Parameters.AddWithValue("@Type", status);
@@ -127,7 +105,7 @@ namespace Malshinon.DALs
                 }
                 finally
                 {
-                    CloseConnection();
+                    dbConnection.CloseConnection();
                 }
             }
         }
@@ -150,7 +128,7 @@ namespace Malshinon.DALs
             int numReports = currentNumReports + 1;
             _UpdateNumReports(Fname, numReports);
 
-            double avrageLenReports = GetAvrageLenReports(Fname);
+            double avrageLenReports = DalReport.GetAvrageLenReports(Fname);
             if (numReports >= 10 && avrageLenReports >= 100)
             {
                 Console.WriteLine($"{Fname} is a potential agent");
@@ -174,9 +152,9 @@ namespace Malshinon.DALs
             int currentNumMentions = -1;
             try
             {
-                OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "SELECT num_mentions FROM people WHERE first_name = @Fname";
-                using (var cmd = new MySqlCommand(query, _conn))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", $"{Fname}");
                     using (var reader = cmd.ExecuteReader())
@@ -202,7 +180,7 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
             return currentNumMentions;
         }
@@ -211,9 +189,9 @@ namespace Malshinon.DALs
             int currentNumReports = -1;
             try
             {
-                OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "SELECT num_reports FROM people WHERE first_name = @Fname";
-                using (var cmd = new MySqlCommand(query, _conn))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", $"{Fname}");
                     using (var reader = cmd.ExecuteReader())
@@ -239,7 +217,7 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
             return currentNumReports;
         }
@@ -247,9 +225,9 @@ namespace Malshinon.DALs
         {
             try
             {
-                OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "UPDATE people SET num_mentions = @num_mentions WHERE first_name = @Fname";
-                using (var cmd = new MySqlCommand(query, _conn))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", Fname);
                     cmd.Parameters.AddWithValue("@num_mentions", NumMentions);
@@ -274,16 +252,16 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
         }
         public void _UpdateNumReports(string Fname, int numReports)
         {
             try
             {
-                OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "UPDATE people SET num_reports = @num_reports WHERE first_name = @Fname";
-                using (var cmd = new MySqlCommand(query, _conn))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", Fname);
                     cmd.Parameters.AddWithValue("@num_reports", numReports);
@@ -308,7 +286,7 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
         }
         public int GetIdByFName(string Fname)
@@ -316,9 +294,9 @@ namespace Malshinon.DALs
             int Id = 0;
             try
             {
-                OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "SELECT id FROM people WHERE first_name = @Fname";
-                using (var cmd = new MySqlCommand(query, _conn))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", $"{Fname}");
                     using (var reader = cmd.ExecuteReader())
@@ -344,35 +322,31 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
             return Id;
         }
-        public double GetAvrageLenReports(string Fname)
+        public void showAllPeople()
         {
-            int sum = 0;
-            int counter = 0;
-            double avrage = 0;
             try
             {
-                OpenConnection();
-                string query = "SELECT i.text " +
-                    "FROM IntelReports AS i " +
-                    "JOIN people AS p " +
-                    "ON i.reporter_id = p.id " +
-                    "WHERE first_name = @Fname";
-                using (var cmd = new MySqlCommand(query, _conn))
+                dbConnection.OpenConnection();
+                string query = "SELECT * FROM people";
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
-                    cmd.Parameters.AddWithValue("@Fname", $"{Fname}");
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            string text = reader.GetString("text");
-                            counter++;
-                            sum += text.Length;
+                            int id = reader.GetInt32("id");
+                            string first_name = reader.GetString("first_name");
+                            string last_name = reader.GetString("last_name");
+                            string secret_code = reader.GetString("secret_code");
+                            string type = reader.GetString("type");
+                            int num_reports = reader.GetInt32("num_reports");
+                            int num_mentions = reader.GetInt32("num_mentions");
 
-                            //Console.WriteLine(reader.GetString("text"));
+                            Console.WriteLine($"id: {id}, first_name: {first_name}, last_name: {last_name}, secret_code: {secret_code}, type: {type}, num_reports: {num_reports}, num_mentions: {num_mentions}");
                         }
                     }
                 }
@@ -387,45 +361,7 @@ namespace Malshinon.DALs
             }
             finally
             {
-                CloseConnection();
-            }
-            if (counter > 0) avrage = sum / counter;
-            return avrage;
-        }
-        public void AddReportToDB(int reporterId, int targetId, string text)
-        {
-            try
-            {
-                OpenConnection();
-                string query = "INSERT INTO IntelReports (reporter_id, target_id, text) " +
-                    "VALUES (@reporter_id, @target_id, @text)";
-                using (var cmd = new MySqlCommand(query, _conn))
-                {
-                    cmd.Parameters.AddWithValue("@reporter_id", reporterId);
-                    cmd.Parameters.AddWithValue("@target_id", targetId);
-                    cmd.Parameters.AddWithValue("@text", text);
-                    int effected = cmd.ExecuteNonQuery();
-                    if (effected > 0)
-                    {
-                        Console.WriteLine($"{reporterId} added a report on {targetId}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("something went wrong in the report");
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"Sql Exception: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception: {ex.Message}");
-            }
-            finally
-            {
-                CloseConnection();
+                dbConnection.CloseConnection();
             }
         }
 

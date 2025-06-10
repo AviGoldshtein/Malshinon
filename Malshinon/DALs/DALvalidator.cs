@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Malshinon.databases;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,15 @@ namespace Malshinon.DALs
 {
     internal class DALvalidator
     {
-        DAL dal = new DAL();
+        DBconnectionMalshinon dbConnection = new DBconnectionMalshinon();
 
         public bool EnsurePersonExeist(string Fname)
         {
             try
             {
-                dal.OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "SELECT * FROM people WHERE first_name LIKE @Fname";
-                using (var cmd = new MySqlCommand(query, dal.Get_conn()))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", $"%{Fname}%");
                     using (var reader = cmd.ExecuteReader())
@@ -39,16 +40,16 @@ namespace Malshinon.DALs
             }
             finally
             {
-                dal.CloseConnection();
+                dbConnection.CloseConnection();
             }
         }
         public bool isTarget(string Fname)
         {
             try
             {
-                dal.OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "SELECT * FROM people WHERE first_name LIKE @Fname AND type = 'target'";
-                using (var cmd = new MySqlCommand(query, dal.Get_conn()))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", $"%{Fname}%");
                     using (var reader = cmd.ExecuteReader())
@@ -69,16 +70,16 @@ namespace Malshinon.DALs
             }
             finally
             {
-                dal.CloseConnection();
+                dbConnection.CloseConnection();
             }
         }
         public bool isReporter(string Fname)
         {
             try
             {
-                dal.OpenConnection();
+                dbConnection.OpenConnection();
                 string query = "SELECT * FROM people WHERE first_name = @Fname AND type = 'reporter'";
-                using (var cmd = new MySqlCommand(query, dal.Get_conn()))
+                using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
                     cmd.Parameters.AddWithValue("@Fname", Fname);
                     using (var reader = cmd.ExecuteReader())
@@ -99,7 +100,7 @@ namespace Malshinon.DALs
             }
             finally
             {
-                dal.CloseConnection();
+                dbConnection.CloseConnection();
             }
         }
 

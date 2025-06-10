@@ -25,9 +25,10 @@ namespace Malshinon
             //dAL.AddPersonToDB(person);
             //Menu menu = new Menu();
             DALvalidator dalValdator = new DALvalidator();
-            DAL dal = new DAL();
+            DALperson dal = new DALperson();
             SecretCodeGenerator SCG = new SecretCodeGenerator();
-            MainManeger maneger = new MainManeger(dalValdator, dal, SCG);
+            DALreport DR = new DALreport();
+            MainManeger maneger = new MainManeger(dalValdator, dal, SCG, DR);
             Menu.ShowMenu(maneger);
             //Console.WriteLine(dal.GetAvrageLenReports("Avi"));
 

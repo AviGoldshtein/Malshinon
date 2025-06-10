@@ -5,20 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Malshinon.DALs;
 using Malshinon.Utils;
+using MySqlX.XDevAPI;
 
 namespace Malshinon.Manegers
 {
     internal class MainManeger
     {
         DALvalidator DalValidator;
-        DAL Dal;
+        public DALperson Dal;
         SecretCodeGenerator CodeGenerator;
+        DALreport DalReport;
 
-        public MainManeger(DALvalidator DV, DAL dal, SecretCodeGenerator SCG)
+        public MainManeger(DALvalidator DV, DALperson dal, SecretCodeGenerator SCG, DALreport DR)
         {
             this.DalValidator = DV;
             this.Dal = dal;
             this.CodeGenerator = SCG;
+            this.DalReport = DR;
         }
         public void AddReport()
         {
@@ -114,7 +117,34 @@ namespace Malshinon.Manegers
             int reporterId = Dal.GetIdByFName(reporterFname);
             int targetId = Dal.GetIdByFName(targetFname);
 
-            Dal.AddReportToDB(reporterId, targetId, textReport);
+            DalReport.AddReportToDB(reporterId, targetId, textReport);
         }
+        public void AddPersonMnualy()
+        {
+            Console.WriteLine("Enter first name");
+            string Fname = Console.ReadLine();
+            Console.WriteLine("Enter last name");
+            string Lname = Console.ReadLine();
+            string code = CodeGenerator.GenerateCode();
+
+            bool exist = DalValidator.EnsurePersonExeist(Fname);
+            if (exist)
+            {
+                Console.WriteLine("this person already exist");
+            }
+            else
+            {
+                bool succsess = Dal.AddPersonToDB(Fname, Lname, code, "reporter");
+                if (succsess)
+                {
+                    Console.WriteLine($"{Fname} {Lname} added successfully");
+                }
+                else
+                {
+                    Console.WriteLine($"there was a problem adding {Fname} {Lname}");
+                }
+            }
+        }
+        
     }
 }
