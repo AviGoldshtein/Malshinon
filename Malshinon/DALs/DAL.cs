@@ -240,7 +240,7 @@ namespace Malshinon.DALs
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
-                        Console.WriteLine($"{Fname} updated to {NumMentions} reports");
+                        Console.WriteLine($"{Fname} updated to {NumMentions} Mentions");
                     }
                     else
                     {
