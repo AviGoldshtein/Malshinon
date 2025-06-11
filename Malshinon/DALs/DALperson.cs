@@ -63,7 +63,7 @@ namespace Malshinon.DALs
                     }
                     else
                     {
-                        Console.WriteLine("something went wrong");
+                        Console.WriteLine("something went wrong while adding the person");
                     }
                 }
             }
@@ -137,16 +137,13 @@ namespace Malshinon.DALs
             }
 
         }
-        public void IncreseNumMentions(string Fname)
+        public int IncreseNumMentions(string Fname)
         {
             int currentNumMentions = _GetCurrentNumMentionsByName(Fname);
             int NumMentions = currentNumMentions + 1;
             _UpdateNumMentions(Fname, NumMentions);
 
-            if (NumMentions >= 20)
-            {
-                Console.WriteLine($"DANGER: {Fname} has {NumMentions} mentions");
-            }
+            return NumMentions;
         }
         private int _GetCurrentNumMentionsByName(string Fname)
         {
@@ -438,9 +435,9 @@ namespace Malshinon.DALs
             }
             return metchedPoeple;
         }
-        public void GetSecretCodeByName()
+        public string GetSecretCodeByName()
         {
-
+            return "";
         }
 
     }
