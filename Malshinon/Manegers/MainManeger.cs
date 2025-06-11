@@ -36,13 +36,13 @@ namespace Malshinon.Manegers
                 return;
             }
 
-
             Console.WriteLine("Enter your report, dont forget to mantion the targets name");
             string textReport = Console.ReadLine();
 
-            var details = ExtractName(textReport);
-            string targetFname = details.Fname;
-            string targetLname = details.Lname;
+            var TargetDetails = ExtractName(textReport);
+            string targetFname = TargetDetails.Fname;
+            string targetLname = TargetDetails.Lname;
+
             if (targetFname != "" && targetLname != "")
             {
                 bool isTargetStateValid = EnsureTargetsState(targetFname, targetLname);
@@ -63,7 +63,13 @@ namespace Malshinon.Manegers
         {
             if (!DalValidator.EnsurePersonExeist(reporterFname))
             {
-                Person ReporterPerson = new Person(reporterFname, reporterLname);
+                Person ReporterPerson = new Person
+                {
+                    Fname = reporterFname,
+                    Lname = reporterLname,
+                    SecretCode = SecretCodeGenerator.GenerateCode(),
+                    Type = "reporter"
+                };
                 return DalPerson.AddPersonToDB(ReporterPerson);
             }
             else
@@ -80,7 +86,13 @@ namespace Malshinon.Manegers
         {
             if (!DalValidator.EnsurePersonExeist(targetFname))
             {
-                Person TargetPerson = new Person(targetFname, targetLname, "target");
+                Person TargetPerson = new Person
+                {
+                    Fname = targetFname,
+                    Lname = targetLname,
+                    SecretCode = SecretCodeGenerator.GenerateCode(),
+                    Type = "target"
+                };
                 return DalPerson.AddPersonToDB(TargetPerson);
             }
             else
@@ -132,7 +144,13 @@ namespace Malshinon.Manegers
             }
             else
             {
-                Person person = new Person(Fname, Lname);
+                Person person = new Person
+                {
+                    Fname = Fname,
+                    Lname = Lname,
+                    SecretCode = SecretCodeGenerator.GenerateCode(),
+                    Type = "reporter"
+                };
                 bool succsess = DalPerson.AddPersonToDB(person);
                 if (succsess)
                 {
