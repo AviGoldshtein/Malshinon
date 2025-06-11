@@ -14,7 +14,7 @@ namespace Malshinon.DALs
         DBconnectionMalshinon dbConnection = new DBconnectionMalshinon();
         DALvalidator DalValidator = new DALvalidator();
 
-        public void AddReportToDB(int reporterId, int targetId, string text)
+        public void AddReportToDB(Report report)
         {
             try
             {
@@ -23,13 +23,13 @@ namespace Malshinon.DALs
                     "VALUES (@reporter_id, @target_id, @text)";
                 using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
                 {
-                    cmd.Parameters.AddWithValue("@reporter_id", reporterId);
-                    cmd.Parameters.AddWithValue("@target_id", targetId);
-                    cmd.Parameters.AddWithValue("@text", text);
+                    cmd.Parameters.AddWithValue("@reporter_id", report.ReporterId);
+                    cmd.Parameters.AddWithValue("@target_id", report.TargetId);
+                    cmd.Parameters.AddWithValue("@text", report.Text);
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
-                        Console.WriteLine($"{reporterId} added a report on {targetId}");
+                        Console.WriteLine($"{report.ReporterId} added a report on {report.TargetId}");
                     }
                     else
                     {
@@ -147,8 +147,9 @@ namespace Malshinon.DALs
             }
             return reports;
         }
-        public void showReportsForPerson(string type)
+        public List<Report> showReportsForPerson(string type)
         {
+            List<Report> reports = new List<Report>();
             Console.WriteLine("Enter the name that you want to look for");
             string name = Console.ReadLine();
 
@@ -156,20 +157,22 @@ namespace Malshinon.DALs
             {
                 if (type == "reporter_id" || type == "target_id")
                 {
-                    _showReportsByName(name, type);
+                    reports = _showReportsByName(name, type);
                 }
             }
             else
             {
                 Console.WriteLine($"{name} coudnt be found");
             }
-        }
-        private void _showReportsByName(string name, string type)
+            return reports;
+        }  
+        private List<Report> _showReportsByName(string name, string type)
         {
+            List<Report> reports = new List<Report>();
             if (!(type == "reporter_id" || type == "target_id"))
             {
                 Console.WriteLine("something was wrong");
-                return;
+                return reports;
             }
             try
             {
@@ -192,7 +195,18 @@ namespace Malshinon.DALs
                             string text = reader.GetString("text");
                             DateTime timestamp = reader.GetDateTime("timestamp");
 
-                            Console.WriteLine($"id: {id}, reporter_id: {reporter_id}, target_id: {target_id}, text: {text}, timestamp: {timestamp}");
+                            Report report = new Report
+                            {
+                                Id = id,
+                                ReporterId = reporter_id,
+                                TargetId = target_id,
+                                Text = text,
+                                Timestamp = timestamp
+                            };
+
+                            reports.Add(report);
+
+                            //Console.WriteLine($"id: {id}, reporter_id: {reporter_id}, target_id: {target_id}, text: {text}, timestamp: {timestamp}");
                         }
                     }
                 }
@@ -209,6 +223,7 @@ namespace Malshinon.DALs
             {
                 dbConnection.CloseConnection();
             }
+            return reports;
         }
     }
 }

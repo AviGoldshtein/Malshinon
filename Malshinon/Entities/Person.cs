@@ -17,24 +17,6 @@ namespace Malshinon.Entities
         public int NumOfRports { get; set; }
         public int NumOfMentions { get; set; }
 
-        //public Person(string fname, string lname, string type = "reporter")
-        //{
-        //    Fname = fname;
-        //    Lname = lname;
-        //    SecretCode = SecretCodeGenerator.GenerateCode();
-        //    Type = type;
-        //    NumOfRports = 0;
-        //    NumOfMentions = 0;
-        //}
-
-        public int GetId() => this.Id;
-        public string GetFname() => this.Fname;
-        public string GetLname() => this.Lname;
-        public string GetSecretCode() => this.SecretCode;
-        public string GetTypeName() => this.Type;
-        public int GetNumOfRports() => this.NumOfRports;
-        public int GetNumOfMentions() => this.NumOfMentions;
-
         public override string ToString()
         {
             return $"Id: {Id}\n" +

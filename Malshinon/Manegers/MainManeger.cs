@@ -12,15 +12,17 @@ namespace Malshinon.Manegers
 {
     internal class MainManeger
     {
-        DALvalidator DalValidator;
+        public DALalerts DAalAlerts;
+        public DALvalidator DalValidator;
         public DALperson DalPerson;
         public DALreport DalReport;
 
-        public MainManeger(DALvalidator DV, DALperson dal, DALreport DR)
+        public MainManeger(DALvalidator DV, DALperson dal, DALreport DR, DALalerts DA)
         {
             this.DalValidator = DV;
             this.DalPerson = dal;
             this.DalReport = DR;
+            this.DAalAlerts = DA;
         }
         public void AddReport()
         {
@@ -29,8 +31,8 @@ namespace Malshinon.Manegers
             Console.WriteLine("enter last name");
             string reporterLname = Console.ReadLine();
 
-            bool isReporterStateValid = EnsureReportersState(reporterFname, reporterLname);
-            if (!isReporterStateValid)
+            bool isReporterValid = EnsureReportersState(reporterFname, reporterLname);
+            if (!isReporterValid)
             {
                 Console.WriteLine("the prosess of adding a report stoped");
                 return;
@@ -45,8 +47,8 @@ namespace Malshinon.Manegers
 
             if (targetFname != "" && targetLname != "")
             {
-                bool isTargetStateValid = EnsureTargetsState(targetFname, targetLname);
-                if (!isTargetStateValid)
+                bool IsTargetValid = EnsureTargetsState(targetFname, targetLname);
+                if (!IsTargetValid)
                 {
                     Console.WriteLine("the prosess of adding a report stoped");
                     return;
@@ -123,12 +125,34 @@ namespace Malshinon.Manegers
         public void InsertReport(string reporterFname, string targetFname, string textReport)
         {
             DalPerson.IncreseNumReports(reporterFname);
-            DalPerson.IncreseNumMentions(targetFname);
+            int numOfMentions =  DalPerson.IncreseNumMentions(targetFname);
 
             int reporterId = DalPerson.GetIdByFName(reporterFname);
             int targetId = DalPerson.GetIdByFName(targetFname);
 
-            DalReport.AddReportToDB(reporterId, targetId, textReport);
+            Report report = new Report
+            {
+                ReporterId = reporterId,
+                TargetId = targetId,
+                Text = textReport
+            };
+
+            DalReport.AddReportToDB(report);
+
+
+            if (numOfMentions >= 20)
+            {
+                string textAlert = $"DANGER: {targetFname} has {numOfMentions} mentions";
+                Console.WriteLine(textAlert);
+
+                Alert alert = new Alert
+                {
+                    TargetId = targetId,
+                    Reason = textAlert
+                };
+
+                DAalAlerts.InsertAlert(alert);
+            }
         }
         public void AddPersonMnualy()
         {
@@ -162,8 +186,5 @@ namespace Malshinon.Manegers
                 }
             }
         }
-        
-
-
     }
 }

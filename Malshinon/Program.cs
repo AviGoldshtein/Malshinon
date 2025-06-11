@@ -14,26 +14,12 @@ namespace Malshinon
     {
         static void Main(string[] args)
         {
-            //DAL dAL = new DAL();
-            //DALvalidator dALvalidator = new DALvalidator();
-            //SecretCodeGenerator CodeGenerator = new SecretCodeGenerator();
-            //dAL.OpenConnection();
-            //string code = CodeGenerator.GenerateCode("aaaab");
-            //Console.WriteLine(dALvalidator.EnsurePersonExeist("muchamady"));
-
-            //Person person = new Person("muchamady", "alcerem", code, "reporter");
-            //dAL.AddPersonToDB(person);
-            //Menu menu = new Menu();
             DALvalidator dalValdator = new DALvalidator();
             DALperson dal = new DALperson();
             DALreport DR = new DALreport();
-            MainManeger maneger = new MainManeger(dalValdator, dal, DR);
+            DALalerts DA = new DALalerts();
+            MainManeger maneger = new MainManeger(dalValdator, dal, DR, DA);
             Menu.ShowMenu(maneger);
-            //Console.WriteLine(dal.GetAvrageLenReports("Avi"));
-
-
-
-
 
         }
     }

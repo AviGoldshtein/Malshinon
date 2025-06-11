@@ -23,6 +23,7 @@ namespace Malshinon.Manegers
                     "6. show reports linked to a specific target\n" +
                     "7. show people of a specific type\n" +
                     "8. get secret code by full name\n" +
+                    "9. show all alerts\n" +
                     "1000. to exit\n");
                 string choice = Console.ReadLine();
                 Console.Clear();
@@ -42,16 +43,19 @@ namespace Malshinon.Manegers
                         Report.PrintListReports(maneger.DalReport.showAllReports());
                         break;
                     case "5":
-                        maneger.DalReport.showReportsForPerson("reporter_id");
+                        Report.PrintListReports(maneger.DalReport.showReportsForPerson("reporter_id"));
                         break;
                     case "6":
-                        maneger.DalReport.showReportsForPerson("target_id");
+                        Report.PrintListReports(maneger.DalReport.showReportsForPerson("target_id"));
                         break;
                     case "7":
                         Person.PrintListPouple(maneger.DalPerson.RetrievePeopleOfType(typeOptions()));
                         break;
                     case "8":
-                        maneger.DalPerson.GetSecretCodeByName();
+                        Console.WriteLine(maneger.DalPerson.GetSecretCodeByName());
+                        break;
+                    case "9":
+                        Alert.PrintListAlerts(maneger.DAalAlerts.RetrieveAllAlerts());
                         break;
                     case "1000":
                         Console.WriteLine("have a good day");

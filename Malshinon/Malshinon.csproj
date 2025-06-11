@@ -98,10 +98,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DALs\DALalerts.cs" />
     <Compile Include="DALs\DALperson.cs" />
     <Compile Include="DALs\DALreport.cs" />
     <Compile Include="DALs\DALvalidator.cs" />
     <Compile Include="databases\DBconnectionMalshinon.cs" />
+    <Compile Include="Entities\Alert.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\Report.cs" />
     <Compile Include="Manegers\MainManeger.cs" />

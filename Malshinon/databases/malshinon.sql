@@ -7,11 +7,8 @@
 CREATE DATABASE IF NOT EXISTS malshinonDB;
 USE malshinonDB;
 
-DROP TABLE IF EXISTS `IntelReports`;
-DROP TABLE IF EXISTS `people`;
-DROP TABLE IF EXISTS `alerts`;
 
-CREATE TABLE `people` (
+CREATE TABLE IF NOT EXISTS `people` (
   `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
   `first_name` VARCHAR(50) NOT NULL UNIQUE,
   `last_name` VARCHAR(50) NOT NULL,
@@ -21,7 +18,7 @@ CREATE TABLE `people` (
   `num_mentions` INT DEFAULT 0
 );
 
-CREATE TABLE `IntelReports` (
+CREATE TABLE IF NOT EXISTS `IntelReports` (
   `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
   `reporter_id` INT,
   `target_id` INT,
@@ -31,7 +28,7 @@ CREATE TABLE `IntelReports` (
   FOREIGN KEY (`target_id`) REFERENCES `people`(`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `alerts` (
+CREATE TABLE IF NOT EXISTS `alerts` (
   `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
   `target_id` INT,
   `reason` TEXT,
