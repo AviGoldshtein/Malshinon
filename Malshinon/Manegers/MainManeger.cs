@@ -75,7 +75,7 @@ namespace Malshinon.Manegers
                     return true;
                 }
             }
-            return false;
+            return true;
         }
         public bool EnsureTargetsState(string targetFname, string targetLname)
         {
@@ -92,7 +92,7 @@ namespace Malshinon.Manegers
                     return true;
                 }
             }
-            return false;
+            return true;
         }
         public (string Fname, string Lname) ExtractName(string text)
         {
