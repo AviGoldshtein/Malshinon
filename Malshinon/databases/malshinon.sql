@@ -9,6 +9,7 @@ USE malshinonDB;
 
 DROP TABLE IF EXISTS `IntelReports`;
 DROP TABLE IF EXISTS `people`;
+DROP TABLE IF EXISTS `alerts`;
 
 CREATE TABLE `people` (
   `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
@@ -27,5 +28,13 @@ CREATE TABLE `IntelReports` (
   `text` TEXT,
   `timestamp` DATETIME DEFAULT NOW(),
   FOREIGN KEY (`reporter_id`) REFERENCES `people`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`target_id`) REFERENCES `people`(`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `alerts` (
+  `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+  `target_id` INT,
+  `reason` TEXT,
+  `created_at` DATETIME DEFAULT NOW(),
   FOREIGN KEY (`target_id`) REFERENCES `people`(`id`) ON DELETE CASCADE
 );
