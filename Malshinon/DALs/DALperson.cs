@@ -36,15 +36,15 @@ namespace Malshinon.DALs
         
         public bool AddPersonToDB(Person person)
         {
-            if (!_statusOK(person.GetTypeName()))
+            if (!_statusOK(person.Type))
             {
                 Console.WriteLine("this status is not alloud");
                 return false;
             }
             try
             {
-                string firstName = Convert.ToString(char.ToUpper(person.GetFname()[0])) + person.GetFname().Substring(1);
-                string lastName = Convert.ToString(char.ToUpper(person.GetLname()[0])) + person.GetLname().Substring(1);
+                string firstName = Convert.ToString(char.ToUpper(person.Fname[0])) + person.Fname.Substring(1);
+                string lastName = Convert.ToString(char.ToUpper(person.Lname[0])) + person.Lname.Substring(1);
 
                 dbConnection.OpenConnection();
                 string query = "INSERT INTO people (first_name, last_name, secret_code, type) " +
@@ -53,12 +53,12 @@ namespace Malshinon.DALs
                 {
                     cmd.Parameters.AddWithValue("@Fname", firstName);
                     cmd.Parameters.AddWithValue("@Lname", lastName);
-                    cmd.Parameters.AddWithValue("@Scode", person.GetSecretCode());
-                    cmd.Parameters.AddWithValue("@Type", person.GetTypeName());
+                    cmd.Parameters.AddWithValue("@Scode", person.SecretCode);
+                    cmd.Parameters.AddWithValue("@Type", person.Type);
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
-                        Console.WriteLine($"{person.GetFname()} {person.GetLname()} was added");
+                        Console.WriteLine($"{person.Fname} {person.Lname} was added");
                         return true;
                     }
                     else
