@@ -111,7 +111,11 @@ namespace Malshinon.DALs
                             string text = reader.GetString("text");
                             DateTime timestamp = reader.GetDateTime("timestamp");
 
-                            Console.WriteLine($"id: {id}, reporter_id: {reporter_id}, target_id: {target_id}, text: {text}, timestamp: {timestamp}");
+                            Console.WriteLine($"id: {id}\n" +
+                                $"reporter_id: {reporter_id}\n" +
+                                $"target_id: {target_id}\n" +
+                                $"timestamp: {timestamp}\n" +
+                                $"text: {text}\n");
                         }
                     }
                 }

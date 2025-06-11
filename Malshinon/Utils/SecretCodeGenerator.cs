@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Malshinon.Utils
 {
-    internal class SecretCodeGenerator
+    internal static class SecretCodeGenerator
     {
-        private Faker faker = new Faker();
-        public string GenerateCode()
+        private static Faker faker = new Faker();
+        public static string GenerateCode()
         {
             string secretCode = faker.Random.AlphaNumeric(10);
             return secretCode;

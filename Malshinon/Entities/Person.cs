@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Malshinon.Utils;
 
 namespace Malshinon.Entities
 {
@@ -16,15 +17,14 @@ namespace Malshinon.Entities
         int NumOfRports;
         int NumOfMentions;
 
-        public Person(string fname, string lname, string secretCode, string type, int id = 0, int numOfRports = 0, int numOfMentions = 0)
+        public Person(string fname, string lname, string type = "reporter")
         {
-            Id = id;
             Fname = fname;
             Lname = lname;
-            SecretCode = secretCode;
+            SecretCode = SecretCodeGenerator.GenerateCode();
             Type = type;
-            NumOfRports = numOfRports;
-            NumOfMentions = numOfMentions;
+            NumOfRports = 0;
+            NumOfMentions = 0;
         }
 
         public int GetId() => this.Id;

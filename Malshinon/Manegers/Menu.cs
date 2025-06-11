@@ -49,6 +49,9 @@ namespace Malshinon.Manegers
                     case "7":
                         maneger.DalPerson.ShowPoupleOfType(typeOptions());
                         break;
+                    case "8":
+                        maneger.DalPerson.GetSecretCodeByName();
+                        break;
                     case "1000":
                         Console.WriteLine("have a good day");
                         running = false;

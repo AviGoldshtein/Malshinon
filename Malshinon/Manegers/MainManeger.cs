@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Malshinon.DALs;
+using Malshinon.Entities;
 using Malshinon.Utils;
 using MySqlX.XDevAPI;
 
@@ -13,14 +14,12 @@ namespace Malshinon.Manegers
     {
         DALvalidator DalValidator;
         public DALperson DalPerson;
-        SecretCodeGenerator CodeGenerator;
         public DALreport DalReport;
 
-        public MainManeger(DALvalidator DV, DALperson dal, SecretCodeGenerator SCG, DALreport DR)
+        public MainManeger(DALvalidator DV, DALperson dal, DALreport DR)
         {
             this.DalValidator = DV;
             this.DalPerson = dal;
-            this.CodeGenerator = SCG;
             this.DalReport = DR;
         }
         public void AddReport()
@@ -64,8 +63,8 @@ namespace Malshinon.Manegers
         {
             if (!DalValidator.EnsurePersonExeist(reporterFname))
             {
-                string code = CodeGenerator.GenerateCode();
-                return DalPerson.AddPersonToDB(reporterFname, reporterLname, code, "reporter");
+                Person ReporterPerson = new Person(reporterFname, reporterLname);
+                return DalPerson.AddPersonToDB(ReporterPerson);
             }
             else
             {
@@ -81,8 +80,8 @@ namespace Malshinon.Manegers
         {
             if (!DalValidator.EnsurePersonExeist(targetFname))
             {
-                string code = CodeGenerator.GenerateCode();
-                return DalPerson.AddPersonToDB(targetFname, targetLname, code, "target");
+                Person TargetPerson = new Person(targetFname, targetLname, "target");
+                return DalPerson.AddPersonToDB(TargetPerson);
             }
             else
             {
@@ -125,7 +124,6 @@ namespace Malshinon.Manegers
             string Fname = Console.ReadLine();
             Console.WriteLine("Enter last name");
             string Lname = Console.ReadLine();
-            string code = CodeGenerator.GenerateCode();
 
             bool exist = DalValidator.EnsurePersonExeist(Fname);
             if (exist)
@@ -134,7 +132,8 @@ namespace Malshinon.Manegers
             }
             else
             {
-                bool succsess = DalPerson.AddPersonToDB(Fname, Lname, code, "reporter");
+                Person person = new Person(Fname, Lname);
+                bool succsess = DalPerson.AddPersonToDB(person);
                 if (succsess)
                 {
                     Console.WriteLine($"{Fname} {Lname} added successfully");

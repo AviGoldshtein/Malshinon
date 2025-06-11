@@ -33,17 +33,17 @@ namespace Malshinon.DALs
 
         
         
-        public bool AddPersonToDB(string Fname, string Lname, string SecretCode, string status)
+        public bool AddPersonToDB(Person person)
         {
-            if (!_statusOK(status))
+            if (!_statusOK(person.GetTypeName()))
             {
                 Console.WriteLine("this status is not alloud");
                 return false;
             }
             try
             {
-                string firstName = Convert.ToString(char.ToUpper(Fname[0])) + Fname.Substring(1);
-                string lastName = Convert.ToString(char.ToUpper(Lname[0])) + Lname.Substring(1);
+                string firstName = Convert.ToString(char.ToUpper(person.GetFname()[0])) + person.GetFname().Substring(1);
+                string lastName = Convert.ToString(char.ToUpper(person.GetLname()[0])) + person.GetLname().Substring(1);
 
                 dbConnection.OpenConnection();
                 string query = "INSERT INTO people (first_name, last_name, secret_code, type) " +
@@ -52,12 +52,12 @@ namespace Malshinon.DALs
                 {
                     cmd.Parameters.AddWithValue("@Fname", firstName);
                     cmd.Parameters.AddWithValue("@Lname", lastName);
-                    cmd.Parameters.AddWithValue("@Scode", SecretCode);
-                    cmd.Parameters.AddWithValue("@Type", status);
+                    cmd.Parameters.AddWithValue("@Scode", person.GetSecretCode());
+                    cmd.Parameters.AddWithValue("@Type", person.GetTypeName());
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
-                        Console.WriteLine($"{Fname} {Lname} was added");
+                        Console.WriteLine($"{person.GetFname()} {person.GetLname()} was added");
                         return true;
                     }
                     else
@@ -346,7 +346,13 @@ namespace Malshinon.DALs
                             int num_reports = reader.GetInt32("num_reports");
                             int num_mentions = reader.GetInt32("num_mentions");
 
-                            Console.WriteLine($"id: {id}, first_name: {first_name}, last_name: {last_name}, secret_code: {secret_code}, type: {type}, num_reports: {num_reports}, num_mentions: {num_mentions}");
+                            Console.WriteLine($"id: {id}\n" +
+                                $"first_name: {first_name}\n" +
+                                $"last_name: {last_name}\n" +
+                                $"secret_code: {secret_code}\n" +
+                                $"type: {type}\n" +
+                                $"num_reports: {num_reports}\n" +
+                                $"num_mentions: {num_mentions}\n");
                         }
                     }
                 }
@@ -402,6 +408,10 @@ namespace Malshinon.DALs
             {
                 dbConnection.CloseConnection();
             }
+        }
+        public void GetSecretCodeByName()
+        {
+
         }
 
     }
