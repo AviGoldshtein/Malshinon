@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Malshinon.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,10 +36,10 @@ namespace Malshinon.Manegers
                         maneger.AddPersonMnualy();
                         break;
                     case "3":
-                        maneger.DalPerson.showAllPeople();
+                        Person.PrintListPouple(maneger.DalPerson.RetrieveAllPeople());
                         break;
                     case "4":
-                        maneger.DalReport.showAllReports();
+                        Report.PrintListReports(maneger.DalReport.showAllReports());
                         break;
                     case "5":
                         maneger.DalReport.showReportsForPerson("reporter_id");
@@ -47,7 +48,10 @@ namespace Malshinon.Manegers
                         maneger.DalReport.showReportsForPerson("target_id");
                         break;
                     case "7":
-                        maneger.DalPerson.ShowPoupleOfType(typeOptions());
+                        Person.PrintListPouple(maneger.DalPerson.RetrievePeopleOfType(typeOptions()));
+                        break;
+                    case "8":
+                        maneger.DalPerson.GetSecretCodeByName();
                         break;
                     case "1000":
                         Console.WriteLine("have a good day");

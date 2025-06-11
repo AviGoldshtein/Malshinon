@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Malshinon.databases;
 using Malshinon.Entities;
+using Malshinon.Utils;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
 using static System.Net.Mime.MediaTypeNames;
@@ -33,17 +34,17 @@ namespace Malshinon.DALs
 
         
         
-        public bool AddPersonToDB(string Fname, string Lname, string SecretCode, string status)
+        public bool AddPersonToDB(Person person)
         {
-            if (!_statusOK(status))
+            if (!_statusOK(person.GetTypeName()))
             {
                 Console.WriteLine("this status is not alloud");
                 return false;
             }
             try
             {
-                string firstName = Convert.ToString(char.ToUpper(Fname[0])) + Fname.Substring(1);
-                string lastName = Convert.ToString(char.ToUpper(Lname[0])) + Lname.Substring(1);
+                string firstName = Convert.ToString(char.ToUpper(person.GetFname()[0])) + person.GetFname().Substring(1);
+                string lastName = Convert.ToString(char.ToUpper(person.GetLname()[0])) + person.GetLname().Substring(1);
 
                 dbConnection.OpenConnection();
                 string query = "INSERT INTO people (first_name, last_name, secret_code, type) " +
@@ -52,12 +53,12 @@ namespace Malshinon.DALs
                 {
                     cmd.Parameters.AddWithValue("@Fname", firstName);
                     cmd.Parameters.AddWithValue("@Lname", lastName);
-                    cmd.Parameters.AddWithValue("@Scode", SecretCode);
-                    cmd.Parameters.AddWithValue("@Type", status);
+                    cmd.Parameters.AddWithValue("@Scode", person.GetSecretCode());
+                    cmd.Parameters.AddWithValue("@Type", person.GetTypeName());
                     int effected = cmd.ExecuteNonQuery();
                     if (effected > 0)
                     {
-                        Console.WriteLine($"{Fname} {Lname} was added");
+                        Console.WriteLine($"{person.GetFname()} {person.GetLname()} was added");
                         return true;
                     }
                     else
@@ -326,8 +327,9 @@ namespace Malshinon.DALs
             }
             return Id;
         }
-        public void showAllPeople()
+        public List<Person> RetrieveAllPeople()
         {
+            List<Person> AllPoeple = new List<Person>();
             try
             {
                 dbConnection.OpenConnection();
@@ -346,7 +348,25 @@ namespace Malshinon.DALs
                             int num_reports = reader.GetInt32("num_reports");
                             int num_mentions = reader.GetInt32("num_mentions");
 
-                            Console.WriteLine($"id: {id}, first_name: {first_name}, last_name: {last_name}, secret_code: {secret_code}, type: {type}, num_reports: {num_reports}, num_mentions: {num_mentions}");
+                            Person person = new Person
+                            {
+                                Id = id,
+                                Fname = first_name,
+                                Lname = last_name,
+                                SecretCode = secret_code,
+                                Type = type,
+                                NumOfRports = num_reports,
+                                NumOfMentions = num_mentions
+                            };
+
+                            AllPoeple.Add(person);
+                            //Console.WriteLine($"id: {id}\n" +
+                            //    $"first_name: {first_name}\n" +
+                            //    $"last_name: {last_name}\n" +
+                            //    $"secret_code: {secret_code}\n" +
+                            //    $"type: {type}\n" +
+                            //    $"num_reports: {num_reports}\n" +
+                            //    $"num_mentions: {num_mentions}\n");
                         }
                     }
                 }
@@ -363,9 +383,11 @@ namespace Malshinon.DALs
             {
                 dbConnection.CloseConnection();
             }
+            return AllPoeple;
         }
-        public void ShowPoupleOfType(string typeasked)
+        public List<Person> RetrievePeopleOfType(string typeasked)
         {
+            List<Person> metchedPoeple = new List<Person>();
             try
             {
                 dbConnection.OpenConnection();
@@ -385,7 +407,19 @@ namespace Malshinon.DALs
                             int num_reports = reader.GetInt32("num_reports");
                             int num_mentions = reader.GetInt32("num_mentions");
 
-                            Console.WriteLine($"id: {id}, first_name: {first_name}, last_name: {last_name}, secret_code: {secret_code}, type: {type}, num_reports: {num_reports}, num_mentions: {num_mentions}");
+                            Person person = new Person
+                            {
+                                Id = id,
+                                Fname = first_name,
+                                Lname = last_name,
+                                SecretCode = secret_code,
+                                Type = type,
+                                NumOfRports = num_reports,
+                                NumOfMentions = num_mentions
+                            };
+
+                            metchedPoeple.Add(person);
+                            //Console.WriteLine($"id: {id}, first_name: {first_name}, last_name: {last_name}, secret_code: {secret_code}, type: {type}, num_reports: {num_reports}, num_mentions: {num_mentions}");
                         }
                     }
                 }
@@ -402,6 +436,11 @@ namespace Malshinon.DALs
             {
                 dbConnection.CloseConnection();
             }
+            return metchedPoeple;
+        }
+        public void GetSecretCodeByName()
+        {
+
         }
 
     }

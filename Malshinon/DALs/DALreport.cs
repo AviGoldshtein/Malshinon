@@ -1,4 +1,5 @@
 ﻿using Malshinon.databases;
+using Malshinon.Entities;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -93,8 +94,9 @@ namespace Malshinon.DALs
             if (counter > 0) avrage = sum / counter;
             return avrage;
         }
-        public void showAllReports()
+        public List<Report> showAllReports()
         {
+            List<Report> reports = new List<Report>();
             try
             {
                 dbConnection.OpenConnection();
@@ -111,7 +113,22 @@ namespace Malshinon.DALs
                             string text = reader.GetString("text");
                             DateTime timestamp = reader.GetDateTime("timestamp");
 
-                            Console.WriteLine($"id: {id}, reporter_id: {reporter_id}, target_id: {target_id}, text: {text}, timestamp: {timestamp}");
+                            Report report = new Report
+                            {
+                                Id = id,
+                                ReporterId = reporter_id,
+                                TargetId = target_id,
+                                Timestamp = timestamp,
+                                Text = text,
+                            };
+
+                            reports.Add(report);
+
+                            //Console.WriteLine($"id: {id}\n" +
+                            //    $"reporter_id: {reporter_id}\n" +
+                            //    $"target_id: {target_id}\n" +
+                            //    $"timestamp: {timestamp}\n" +
+                            //    $"text: {text}\n");
                         }
                     }
                 }
@@ -128,6 +145,7 @@ namespace Malshinon.DALs
             {
                 dbConnection.CloseConnection();
             }
+            return reports;
         }
         public void showReportsForPerson(string type)
         {
