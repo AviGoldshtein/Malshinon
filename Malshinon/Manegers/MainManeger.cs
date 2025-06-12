@@ -139,10 +139,28 @@ namespace Malshinon.Manegers
 
             DalReport.AddReportToDB(report);
 
-
-            if (numOfMentions >= 20)
+            TriggerAlertIfNeeded(numOfMentions, targetFname, targetId);
+        }
+        public void TriggerAlertIfNeeded(int numOfMentions, string targetFname, int targetId)
+        {
+            if (numOfMentions % 5 == 0 && numOfMentions >= 20)
             {
                 string textAlert = $"DANGER: {targetFname} has {numOfMentions} mentions";
+                Console.WriteLine(textAlert);
+
+                Alert alert = new Alert
+                {
+                    TargetId = targetId,
+                    Reason = textAlert
+                };
+
+                DAalAlerts.InsertAlert(alert);
+            }
+
+            int NumReportsInTheLast15Minuts = DalReport.GetNumReportsInTheLast15Minuts(targetId);
+            if (NumReportsInTheLast15Minuts >= 3)
+            {
+                string textAlert = $"DANGER: {targetFname} has {NumReportsInTheLast15Minuts} reports in the last 15 minuts";
                 Console.WriteLine(textAlert);
 
                 Alert alert = new Alert

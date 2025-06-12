@@ -103,7 +103,5 @@ namespace Malshinon.DALs
                 dbConnection.CloseConnection();
             }
         }
-
-
     }
 }

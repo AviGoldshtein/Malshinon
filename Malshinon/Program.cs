@@ -20,7 +20,6 @@ namespace Malshinon
             DALalerts DA = new DALalerts();
             MainManeger maneger = new MainManeger(dalValdator, dal, DR, DA);
             Menu.ShowMenu(maneger);
-
         }
     }
 }

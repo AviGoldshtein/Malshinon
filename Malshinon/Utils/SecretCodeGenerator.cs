@@ -15,37 +15,5 @@ namespace Malshinon.Utils
             string secretCode = faker.Random.AlphaNumeric(10);
             return secretCode;
         }
-
-
-
-
-
-        //private string Code = "aaaaa";
-
-        //public string GGGGenerateCode(int index = 4)
-        //{
-        //    char charToChange = Code[index];
-        //    if (charToChange == 'z')
-        //    {
-        //        return GenerateCode(index - 1);
-        //    }
-        //    else
-        //    {
-        //        int intNum = Convert.ToInt32(charToChange) + 1;
-        //        char chrUpdated = (char)intNum;
-        //        string newCode = "";
-        //        for (int i = 0; i < index; i++)
-        //        {
-        //            newCode += Code[i];
-        //        }
-        //        newCode += chrUpdated;
-        //        for (int i = index; i < Code.Length; i++)
-        //        {
-        //            newCode += Code[i];
-        //        }
-        //        Code = newCode;
-        //        return newCode;
-        //    }
-        //}
     }
 }

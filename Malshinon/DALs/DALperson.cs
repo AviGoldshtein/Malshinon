@@ -17,23 +17,6 @@ namespace Malshinon.DALs
         DALreport DalReport = new DALreport();
         DBconnectionMalshinon dbConnection = new DBconnectionMalshinon();
 
-
-        public List<Person> GetAllPeople()
-        {
-            List<Person> people = new List<Person>();
-
-            return people;
-        }
-        public List<Report> GetAllReports()
-        {
-            List<Report> reports = new List<Report>();
-
-            return reports; 
-        }
-
-
-        
-        
         public bool AddPersonToDB(Person person)
         {
             if (!_statusOK(person.Type))
@@ -439,6 +422,5 @@ namespace Malshinon.DALs
         {
             return "";
         }
-
     }
 }

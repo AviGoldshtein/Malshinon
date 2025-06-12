@@ -20,7 +20,6 @@ namespace Malshinon.Entities
                 $"CreatedAt: {CreatedAt}\n" +
                 $"Reason: {Reason}\n";
         }
-
         public static void PrintListAlerts(List<Alert> alerts)
         {
             foreach(Alert alert in alerts)
