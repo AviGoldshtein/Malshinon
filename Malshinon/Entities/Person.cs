@@ -27,7 +27,6 @@ namespace Malshinon.Entities
                 $"NumOfRports: {NumOfRports}\n" +
                 $"NumOfMentions: {NumOfMentions}\n";
         }
-
         public static void PrintListPouple(List<Person> people)
         {
             foreach(Person person in people)

@@ -22,7 +22,6 @@ namespace Malshinon.Entities
                 $"Timestamp: {Timestamp}\n" +
                 $"Text: {Text}\n";
         }
-
         public static void PrintListReports(List<Report> reports)
         {
             foreach (Report report in reports)

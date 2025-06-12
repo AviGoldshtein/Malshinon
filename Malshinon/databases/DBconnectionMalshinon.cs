@@ -22,7 +22,7 @@ namespace Malshinon.databases
             if (_conn.State != System.Data.ConnectionState.Open)
             {
                 _conn.Open();
-                Console.WriteLine("connected succecfuly");
+                Console.WriteLine("connected..");
             }
             return _conn;
         }

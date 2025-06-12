@@ -225,5 +225,44 @@ namespace Malshinon.DALs
             }
             return reports;
         }
+        public int GetNumReportsInTheLast15Minuts(int personId)
+        {
+            int counter = 0;
+            try
+            {
+                dbConnection.OpenConnection();
+                string Query = "SELECT COUNT(*) AS count " +
+                "FROM IntelReports " +
+                "WHERE timestamp >= NOW() - INTERVAL 15 MINUTE " +
+                "AND timestamp <= NOW() " +
+                "AND target_id = @id";
+
+                using (var cmd = new MySqlCommand(Query, dbConnection.Get_conn()))
+                {
+                    cmd.Parameters.AddWithValue("@id", personId);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            counter = reader.GetInt32("count");
+                            Console.WriteLine(counter);
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"Sql Exception: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+            finally
+            {
+                dbConnection.CloseConnection();
+            }
+            return counter;
+        }
     }
 }

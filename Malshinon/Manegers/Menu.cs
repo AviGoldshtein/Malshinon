@@ -73,7 +73,6 @@ namespace Malshinon.Manegers
                 }
             }
         }
-
         public static string typeOptions()
         {
             Console.WriteLine("1. reporters\n" +
