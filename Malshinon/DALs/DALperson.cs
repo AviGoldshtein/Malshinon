@@ -15,6 +15,7 @@ namespace Malshinon.DALs
     internal class DALperson
     {
         DALreport DalReport = new DALreport();
+        DALvalidator DALvalidator = new DALvalidator();
         DBconnectionMalshinon dbConnection = new DBconnectionMalshinon();
 
         public bool AddPersonToDB(Person person)
@@ -420,7 +421,46 @@ namespace Malshinon.DALs
         }
         public string GetSecretCodeByName()
         {
-            return "";
+            string secretCode = "";
+            Console.WriteLine("enter the name:");
+            string Fname = Console.ReadLine();
+            
+            if (!DALvalidator.EnsurePersonExeist(Fname))
+            {
+                Console.WriteLine($"{Fname} dosnt exeist");
+            }
+            else
+            {
+                try
+                {
+                    dbConnection.OpenConnection();
+                    string query = "SELECT secret_code FROM people WHERE first_name = @Fname";
+                    using (var cmd = new MySqlCommand(query, dbConnection.Get_conn()))
+                    {
+                        cmd.Parameters.AddWithValue("@Fname", Fname);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                secretCode = reader.GetString("secret_code");
+                            }
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine($"Sql Exception: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception: {ex.Message}");
+                }
+                finally
+                {
+                    dbConnection.CloseConnection();
+                }
+            }
+            return secretCode;
         }
     }
 }

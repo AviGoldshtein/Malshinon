@@ -9,7 +9,6 @@ namespace Malshinon.Manegers
 {
     internal static class Menu
     {
-        
         public static void ShowMenu(MainManeger maneger)
         {
             bool running = true;
@@ -34,7 +33,7 @@ namespace Malshinon.Manegers
                         maneger.AddReport();
                         break;
                     case "2":
-                        maneger.AddPersonMnualy();
+                        maneger.AddPersonManually();
                         break;
                     case "3":
                         Person.PrintListPouple(maneger.DalPerson.RetrieveAllPeople());
