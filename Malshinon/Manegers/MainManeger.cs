@@ -31,12 +31,7 @@ namespace Malshinon.Manegers
             Console.WriteLine("enter last name");
             string reporterLname = Console.ReadLine();
 
-            bool isReporterValid = EnsureReportersState(reporterFname, reporterLname);
-            if (!isReporterValid)
-            {
-                Console.WriteLine("the prosess of adding a report stoped");
-                return;
-            }
+            int reporterId = EnsureReportersState(reporterFname, reporterLname);
 
             Console.WriteLine("Enter your report, dont forget to mantion the targets name");
             string textReport = Console.ReadLine();
@@ -47,21 +42,16 @@ namespace Malshinon.Manegers
 
             if (targetFname != "" && targetLname != "")
             {
-                bool IsTargetValid = EnsureTargetsState(targetFname, targetLname);
-                if (!IsTargetValid)
-                {
-                    Console.WriteLine("the prosess of adding a report stoped");
-                    return;
-                }
+                int targetId = EnsureTargetsState(targetFname, targetLname);
 
-                InsertReport(reporterFname, targetFname, textReport);
+                InsertReport(reporterFname, targetFname, textReport, targetId, reporterId);
             }
             else
             {
                 Console.WriteLine("you must include in the report the name of the target");
             }
         }
-        public bool EnsureReportersState(string reporterFname, string reporterLname)
+        public int EnsureReportersState(string reporterFname, string reporterLname)
         {
             if (!DalValidator.EnsurePersonExeist(reporterFname))
             {
@@ -72,19 +62,18 @@ namespace Malshinon.Manegers
                     SecretCode = SecretCodeGenerator.GenerateCode(),
                     Type = "reporter"
                 };
-                return DalPerson.AddPersonToDB(ReporterPerson);
+                DalPerson.AddPersonToDB(ReporterPerson);
             }
             else
             {
                 if (DalValidator.isTarget(reporterFname))
                 {
                     DalPerson.UptateStatus(reporterFname, "both");
-                    return true;
                 }
             }
-            return true;
+            return DalPerson.GetIdByFName(reporterFname);
         }
-        public bool EnsureTargetsState(string targetFname, string targetLname)
+        public int EnsureTargetsState(string targetFname, string targetLname)
         {
             if (!DalValidator.EnsurePersonExeist(targetFname))
             {
@@ -95,17 +84,16 @@ namespace Malshinon.Manegers
                     SecretCode = SecretCodeGenerator.GenerateCode(),
                     Type = "target"
                 };
-                return DalPerson.AddPersonToDB(TargetPerson);
+                DalPerson.AddPersonToDB(TargetPerson);
             }
             else
             {
                 if (DalValidator.isReporter(targetFname))
                 {
                     DalPerson.UptateStatus(targetFname, "both");
-                    return true;
                 }
             }
-            return true;
+            return DalPerson.GetIdByFName(targetFname);
         }
         public (string Fname, string Lname) ExtractName(string text)
         {
@@ -122,13 +110,10 @@ namespace Malshinon.Manegers
             }
             return (Fname, Lname);
         }
-        public void InsertReport(string reporterFname, string targetFname, string textReport)
+        public void InsertReport(string reporterFname, string targetFname, string textReport, int targetId, int reporterId)
         {
             DalPerson.IncreseNumReports(reporterFname);
             int numOfMentions =  DalPerson.IncreseNumMentions(targetFname);
-
-            int reporterId = DalPerson.GetIdByFName(reporterFname);
-            int targetId = DalPerson.GetIdByFName(targetFname);
 
             Report report = new Report
             {
@@ -157,7 +142,7 @@ namespace Malshinon.Manegers
                 DAalAlerts.InsertAlert(alert);
             }
 
-            int NumReportsInTheLast15Minuts = DalReport.GetNumReportsInTheLast15Minuts(targetId);
+            int NumReportsInTheLast15Minuts = DalReport.GetReportsOfTheLast15Minuts(targetId);
             if (NumReportsInTheLast15Minuts >= 3)
             {
                 string textAlert = $"DANGER: {targetFname} has {NumReportsInTheLast15Minuts} reports in the last 15 minuts";
@@ -172,7 +157,7 @@ namespace Malshinon.Manegers
                 DAalAlerts.InsertAlert(alert);
             }
         }
-        public void AddPersonMnualy()
+        public void AddPersonManually()
         {
             Console.WriteLine("Enter first name");
             string Fname = Console.ReadLine();

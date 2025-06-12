@@ -225,7 +225,7 @@ namespace Malshinon.DALs
             }
             return reports;
         }
-        public int GetNumReportsInTheLast15Minuts(int personId)
+        public int GetReportsOfTheLast15Minuts(int personId)
         {
             int counter = 0;
             try
